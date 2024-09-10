@@ -1,66 +1,87 @@
-import altair as alt
-import pandas as pd
 import streamlit as st
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
-# Show the page title and description.
-st.set_page_config(page_title="Movies dataset", page_icon="🎬")
-st.title("🎬 Movies dataset")
-st.write(
-    """
-    This app visualizes data from [The Movie Database (TMDB)](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata).
-    It shows which movie genre performed best at the box office over the years. Just 
-    click on the widgets below to explore!
-    """
-)
+# Set the title of the Streamlit app
+st.title("Data Viewing and Predictive Modeling App")
 
+# Sidebar navigation
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Select a page:", ["Data View", "Predictive Modeling"])
 
-# Load the data from a CSV. We're caching this so it doesn't reload every time the app
-# reruns (e.g. if the user interacts with the widgets).
-@st.cache_data
-def load_data():
-    df = pd.read_csv("data/movies_genres_summary.csv")
-    return df
+# Tab 1: Data View
+if page == "Data View":
+    st.header("Data View")
 
+    # Upload dataset
+    uploaded_file = st.file_uploader("Upload a CSV file", type="csv")
+    
+    if uploaded_file is not None:
+        # Read CSV file
+        df = pd.read_csv(uploaded_file)
+        
+        # Display the dataset
+        st.write("Dataset Overview:")
+        st.dataframe(df)
+        
+        # Show dataset statistics
+        st.write("Dataset Statistics:")
+        st.write(df.describe())
+        
+        # Show column information
+        st.write("Column Information:")
+        st.write(df.info())
+    else:
+        st.write("Please upload a CSV file to view the data.")
 
-df = load_data()
+# Tab 2: Predictive Modeling
+elif page == "Predictive Modeling":
+    st.header("Predictive Modeling")
 
-# Show a multiselect widget with the genres using `st.multiselect`.
-genres = st.multiselect(
-    "Genres",
-    df.genre.unique(),
-    ["Action", "Adventure", "Biography", "Comedy", "Drama", "Horror"],
-)
+    # Upload dataset
+    uploaded_file = st.file_uploader("Upload a CSV file for modeling", type="csv", key='2')
 
-# Show a slider widget with the years using `st.slider`.
-years = st.slider("Years", 1986, 2006, (2000, 2016))
+    if uploaded_file is not None:
+        # Read CSV file
+        df = pd.read_csv(uploaded_file)
+        
+        # Display the dataset
+        st.write("Dataset Overview:")
+        st.dataframe(df)
+        
+        # Feature and target selection
+        st.write("Select features and target for the model:")
+        features = st.multiselect("Select features:", df.columns.tolist())
+        target = st.selectbox("Select target:", df.columns.tolist())
 
-# Filter the dataframe based on the widget input and reshape it.
-df_filtered = df[(df["genre"].isin(genres)) & (df["year"].between(years[0], years[1]))]
-df_reshaped = df_filtered.pivot_table(
-    index="year", columns="genre", values="gross", aggfunc="sum", fill_value=0
-)
-df_reshaped = df_reshaped.sort_values(by="year", ascending=False)
+        if len(features) > 0 and target:
+            # Prepare data for modeling
+            X = df[features]
+            y = df[target]
 
+            # Split data into training and testing sets
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Display the data as a table using `st.dataframe`.
-st.dataframe(
-    df_reshaped,
-    use_container_width=True,
-    column_config={"year": st.column_config.TextColumn("Year")},
-)
+            # Train the model
+            model = LinearRegression()
+            model.fit(X_train, y_train)
 
-# Display the data as an Altair chart using `st.altair_chart`.
-df_chart = pd.melt(
-    df_reshaped.reset_index(), id_vars="year", var_name="genre", value_name="gross"
-)
-chart = (
-    alt.Chart(df_chart)
-    .mark_line()
-    .encode(
-        x=alt.X("year:N", title="Year"),
-        y=alt.Y("gross:Q", title="Gross earnings ($)"),
-        color="genre:N",
-    )
-    .properties(height=320)
-)
-st.altair_chart(chart, use_container_width=True)
+            # Predict on the test set
+            y_pred = model.predict(X_test)
+
+            # Show model evaluation metrics
+            st.write("Model Evaluation:")
+            st.write(f"Mean Squared Error: {mean_squared_error(y_test, y_pred)}")
+
+            # Display predictions vs actual values
+            result_df = pd.DataFrame({"Actual": y_test, "Predicted": y_pred})
+            st.write("Predictions vs Actual:")
+            st.write(result_df)
+
+        else:
+            st.write("Please select the features and target for the model.")
+    else:
+        st.write("Please upload a CSV file to build a predictive model.")
