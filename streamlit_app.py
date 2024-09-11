@@ -49,7 +49,7 @@ if uploaded_file is not None:
             sns.heatmap(corr, annot=True, cmap='coolwarm')
             st.pyplot()
     
-    # Tab 2: Predictive Modeling
+    # predictive modeling tab
     elif page == "Predictive Modeling":
         st.header("Predictive Modeling")
 
