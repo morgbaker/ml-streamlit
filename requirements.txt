@@ -7,7 +7,5 @@ seaborn
 statsmodels
 torch
 transformers
-emoji
-deepmoji
 
 
