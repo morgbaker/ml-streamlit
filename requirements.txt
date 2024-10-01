@@ -6,5 +6,7 @@ matplotlib
 seaborn
 statsmodels
 torch
+transformers
+emoji
 
 
