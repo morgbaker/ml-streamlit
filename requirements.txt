@@ -7,5 +7,7 @@ seaborn
 statsmodels
 torch
 transformers
+-e ./torchMoji
+
 
 
