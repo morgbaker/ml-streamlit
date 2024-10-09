@@ -1,12 +1,17 @@
 streamlit
 pandas
-numpy
-scikit-learn
+
 matplotlib
 seaborn
-emoji
+
 statsmodels
 torch
+torch
+emoji==0.4.5
+numpy==1.13.1
+scipy==0.19.1
+scikit-learn==0.19.0
+text-unidecode==1.0
 transformers
 -e ./torchMoji
 sentencepiece>=0.1.96
