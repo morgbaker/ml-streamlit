@@ -1,8 +1,11 @@
+import sys
+sys.path.append('/workspaces/ml-streamlit/torchMoji')
 import streamlit as st
 import json
 import numpy as np
-from torchMoji.torchmoji.sentence_tokenizer import SentenceTokenizer
-from torchMoji.torchmoji.model_def import torchmoji_emojis
+from torchmoji.sentence_tokenizer import SentenceTokenizer
+from torchmoji.model_def import torchmoji_emojis
+
 
 # A list of all the emojis the model might respond with.
 # You'll need to fill in this list or load it from an appropriate source.
@@ -12,8 +15,8 @@ EMOJIS = [
 ]
 
 # Specify the paths to the vocabulary and model weights files. 
-vocab_file_path = 'torchMoji/model/vocabulary.json'
-model_weights_path = 'torchMoji/model/pytorch_model.bin'
+vocab_file_path = 'model/vocabulary.json'
+model_weights_path = 'model/pytorch_model.bin'
 
 # Returns the indices of the k largest elements in array.
 def top_elements(array, k):
