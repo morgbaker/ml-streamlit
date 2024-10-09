@@ -1,8 +1,8 @@
 import streamlit as st
 import json
 import numpy as np
-from torchMoji/torchmoji.sentence_tokenizer import SentenceTokenizer
-from torchMoji/torchmoji.model_def import torchmoji_emojis
+from torchMoji.torchmoji.sentence_tokenizer import SentenceTokenizer
+from torchMoji.torchmoji.model_def import torchmoji_emojis
 
 # A list of all the emojis the model might respond with.
 # You'll need to fill in this list or load it from an appropriate source.
