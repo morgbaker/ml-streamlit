@@ -9,7 +9,7 @@ torch
 transformers
 -e ./torchMoji
 sentencepiece>=0.1.96
-emoji==2.2.0
+emoji
 
 
 
