@@ -4,12 +4,13 @@ numpy
 scikit-learn
 matplotlib
 seaborn
+emoji
 statsmodels
 torch
 transformers
 -e ./torchMoji
 sentencepiece>=0.1.96
-emoji
+
 
 
 
