@@ -8,6 +8,8 @@ statsmodels
 torch
 transformers
 -e ./torchMoji
+sentencepiece>=0.1.96
+
 
 
 
